@@ -1,0 +1,6 @@
+/frontend/node-modules
+/backend/node-modules
+
+/frontend/dist
+/frontend/.gitignore
+/frotnend/.dockerignore
