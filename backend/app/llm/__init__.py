@@ -5,7 +5,7 @@ Creates the appropriate LLM provider based on configuration.
 """
 
 from typing import Optional
-from .base import BaseLLMProvider
+from .base import BaseLLMProvider, LLMResponse
 from .ollama_provider import OllamaProvider
 from .llamacpp_provider import LlamaCppProvider
 

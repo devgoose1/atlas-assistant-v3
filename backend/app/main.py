@@ -10,6 +10,7 @@ from contextlib import asynccontextmanager
 
 from .config import get_settings
 from .routers import chat_router
+from .routers.tools import router as tools_router
 
 
 # Application lifespan for startup/shutdown events
@@ -51,6 +52,7 @@ app.add_middleware(
 
 # Include routers
 app.include_router(chat_router)
+app.include_router(tools_router)
 
 
 # Root endpoint

@@ -28,7 +28,7 @@ class CommandRouter:
         """
         self.llm = llm_provider
 
-    def route(self, intent: str, entities: Dict[str, Any], user_input: str) -> str:
+    def route(self, intent: str, entities: Dict[str, Any], user_input: str, tool_context: str = "") -> str:
         """
         Route intent to appropriate handler.
 
@@ -36,6 +36,7 @@ class CommandRouter:
             intent: Classified intent type
             entities: Extracted entities
             user_input: Original user input
+            tool_context: Context from executed tools
 
         Returns:
             Response text
@@ -61,8 +62,11 @@ class CommandRouter:
         elif intent_type == IntentType.REMINDER:
             return self._handle_reminder(entities)
 
+        elif intent_type == IntentType.COMMAND:
+            return self._handle_general_query(user_input, tool_context)
+
         elif intent_type in [IntentType.QUESTION, IntentType.GENERAL]:
-            return self._handle_general_query(user_input)
+            return self._handle_general_query(user_input, tool_context)
 
         else:
             return "I'm not sure how to help with that. Could you rephrase?"
@@ -134,13 +138,17 @@ class CommandRouter:
         """
         return "Reminder functionality is not yet implemented."
 
-    def _handle_general_query(self, user_input: str) -> str:
+    def _handle_general_query(self, user_input: str, tool_context: str = "") -> str:
         """
         Handle general questions using LLM.
 
         Keep prompts simple for small models.
         """
         system_prompt = "You are JARVIS, a helpful assistant. Answer briefly and directly."
+        
+        # Include tool context if available
+        if tool_context:
+            system_prompt += f"\n\nYou have access to current information:\n{tool_context}"
 
         response = self.llm.generate(
             prompt=user_input,

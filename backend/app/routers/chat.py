@@ -11,6 +11,7 @@ from typing import Optional, Dict, Any
 from ..config import get_settings, Settings
 from ..llm import get_llm_provider, BaseLLMProvider
 from ..services import IntentClassifier, CommandRouter
+from ..tools.manager import ToolManager
 
 
 router = APIRouter(prefix="/api", tags=["chat"])
@@ -74,6 +75,20 @@ async def chat(
     try:
         user_message = request.message.strip()
 
+        # Initialize tool manager for this request
+        tool_manager = ToolManager()
+
+        # Step 0: Auto-detect tools that might be helpful
+        detected_tools = tool_manager.detect_tool(user_message)
+        tool_context = ""
+
+        if detected_tools:
+            # Execute detected tools and collect context
+            for tool_name in detected_tools:
+                result = tool_manager.execute_tool(tool_name, user_message)
+                if result.success and result.context:
+                    tool_context += f"\n## {tool_name.replace('_', ' ').title()}\n{result.context}"
+
         # Step 1: Classify intent (if enabled)
         if settings.enable_intent_classification:
             classifier = IntentClassifier(llm_provider)
@@ -98,12 +113,18 @@ async def chat(
         # Step 2: Route to command handler (if enabled)
         if settings.enable_command_routing:
             router_service = CommandRouter(llm_provider)
-            response_text = router_service.route(intent, entities, user_message)
+            response_text = router_service.route(intent, entities, user_message, tool_context)
         else:
             # Direct LLM response without routing
+            system_prompt = "You are JARVIS, a helpful personal AI assistant. Answer briefly and helpfully."
+            
+            # Include tool context if available
+            if tool_context:
+                system_prompt += f"\n\nYou have access to current information:\n{tool_context}"
+
             llm_response = llm_provider.generate(
                 prompt=user_message,
-                system_prompt="You are JARVIS, a helpful assistant. Answer briefly.",
+                system_prompt=system_prompt,
                 max_tokens=settings.llm_max_tokens
             )
 
@@ -119,7 +140,8 @@ async def chat(
             confidence=confidence,
             metadata={
                 "entities": entities,
-                "model": settings.llm_model_name or "default"
+                "model": settings.llm_model_name or "default",
+                "tools_used": detected_tools
             }
         )
 

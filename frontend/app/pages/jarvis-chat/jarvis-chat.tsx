@@ -5,6 +5,9 @@ interface Message {
   role: "user" | "assistant";
   content: string;
   timestamp: Date;
+  tools_used?: string[];
+  intent?: string;
+  confidence?: number;
 }
 
 interface ChatResponse {
@@ -14,6 +17,7 @@ interface ChatResponse {
   metadata?: {
     entities?: Record<string, any>;
     model?: string;
+    tools_used?: string[];
   };
 }
 
@@ -160,7 +164,10 @@ export function JarvisChat() {
         id: (Date.now() + 1).toString(),
         role: "assistant",
         content: data.response,
-        timestamp: new Date()
+        timestamp: new Date(),
+        tools_used: data.metadata?.tools_used,
+        intent: data.intent,
+        confidence: data.confidence
       };
 
       setMessages(prev => [...prev, assistantMessage]);
@@ -263,6 +270,35 @@ export function JarvisChat() {
                   }`}
                 >
                   <p className="whitespace-pre-wrap break-words">{message.content}</p>
+                  
+                  {/* Tools used */}
+                  {message.tools_used && message.tools_used.length > 0 && (
+                    <div className="mt-2 pt-2 border-t border-gray-200 dark:border-gray-600">
+                      <p className="text-xs font-semibold text-gray-600 dark:text-gray-400 mb-1">
+                        🔧 Used:
+                      </p>
+                      <div className="flex flex-wrap gap-1">
+                        {message.tools_used.map((tool) => (
+                          <span
+                            key={tool}
+                            className="text-xs px-2 py-1 bg-gray-100 dark:bg-gray-700 rounded text-gray-700 dark:text-gray-300"
+                          >
+                            {tool.replace("_", " ")}
+                          </span>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Intent and confidence */}
+                  {message.intent && message.confidence !== undefined && (
+                    <div className="mt-2 pt-2 border-t border-gray-200 dark:border-gray-600">
+                      <p className="text-xs text-gray-500 dark:text-gray-400">
+                        Intent: <span className="font-semibold">{message.intent}</span> ({Math.round(message.confidence * 100)}%)
+                      </p>
+                    </div>
+                  )}
+
                   <p className={`text-xs mt-2 ${
                     message.role === "user" ? "text-blue-100" : "text-gray-400"
                   }`}>
