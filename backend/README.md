@@ -14,7 +14,7 @@ A local, self-hosted AI assistant backend optimized for Raspberry Pi 4 with Qwen
 
 ## Architecture
 
-```
+```text
 ┌─────────────┐
 │   Web UI    │ (Browser with Web Speech API)
 │  (Frontend) │
@@ -67,12 +67,14 @@ chmod +x setup.sh run.sh
 Edit `.env` to set your LLM provider:
 
 **For development (Ollama):**
+
 ```env
 LLM_PROVIDER=ollama
 LLM_BASE_URL=http://localhost:11434
 ```
 
 **For production (llama.cpp on Raspberry Pi):**
+
 ```env
 LLM_PROVIDER=llamacpp
 LLM_BASE_URL=http://localhost:8080
@@ -82,11 +84,13 @@ LLM_MODEL_NAME=qwen-1_5b-chat-q4_0.gguf
 ### 3. Start LLM Server
 
 **Ollama (Development):**
+
 ```bash
 ollama run qwen:1.5b-chat-v1.5-q4_0
 ```
 
 **llama.cpp (Production on Raspberry Pi):**
+
 ```bash
 cd /path/to/llama.cpp
 ./server -m models/qwen-1_5b-chat-q4_0.gguf \
@@ -111,6 +115,7 @@ The API will be available at `http://0.0.0.0:8000`
 Send a message to JARVIS.
 
 **Request:**
+
 ```json
 {
   "message": "Hello JARVIS"
@@ -118,6 +123,7 @@ Send a message to JARVIS.
 ```
 
 **Response:**
+
 ```json
 {
   "response": "Good evening! I'm JARVIS. How can I assist you?",
@@ -135,6 +141,7 @@ Send a message to JARVIS.
 Health check endpoint.
 
 **Response:**
+
 ```json
 {
   "status": "healthy",
@@ -159,7 +166,7 @@ Health check endpoint.
 All configuration is done via environment variables in `.env`:
 
 | Variable | Description | Default |
-|----------|-------------|---------|
+| -------- | ----------- | --------- |
 | `LLM_PROVIDER` | LLM backend: `ollama` or `llamacpp` | `ollama` |
 | `LLM_BASE_URL` | LLM server URL | Provider-specific |
 | `LLM_MODEL_NAME` | Model name | Provider-specific |
@@ -171,7 +178,7 @@ All configuration is done via environment variables in `.env`:
 
 ## Project Structure
 
-```
+```text
 backend/
 ├── app/
 │   ├── llm/                    # LLM abstraction layer
@@ -218,19 +225,22 @@ uvicorn app.main:app --reload --host 0.0.0.0 --port 8000
 ### API Documentation
 
 FastAPI provides automatic interactive documentation:
-- Swagger UI: http://localhost:8000/docs
-- ReDoc: http://localhost:8000/redoc
+
+- Swagger UI: <http://localhost:8000/docs>
+- ReDoc: <http://localhost:8000/redoc>
 
 ## Troubleshooting
 
 ### LLM Provider Not Available
 
 Check health endpoint:
+
 ```bash
 curl http://localhost:8000/api/health
 ```
 
 If `llm_available: false`:
+
 1. Verify LLM server is running
 2. Check `LLM_BASE_URL` in `.env`
 3. Test LLM server directly:

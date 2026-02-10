@@ -13,9 +13,27 @@ A self-hosted AI assistant optimized for Raspberry Pi 4, featuring voice interac
 - 🔄 **Dual LLM Support**: Switch between Ollama (dev) and llama.cpp (prod)
 - 📦 **Minimal Dependencies**: Lightweight and resource-efficient
 
+## Getting Started
+
+Choose your setup guide based on your platform:
+
+- 🪟 **[Windows Setup Guide](WINDOWS_SETUP.md)** - Complete guide for Windows development
+- 🐧 **[Linux Setup Guide](LINUX_SETUP.md)** - Complete guide for Linux development
+- 🥧 **[Raspberry Pi Deployment](DEPLOYMENT.md)** - Deploy to Raspberry Pi for production
+
+**Quick Start Summary:**
+
+1. Install prerequisites (Python, Node.js, Ollama)
+2. Run backend setup script
+3. Start Ollama and backend
+4. Start frontend
+5. Open browser to <http://localhost:5173/jarvis>
+
+Detailed instructions for your platform are in the links above.
+
 ## Architecture
 
-```
+```text
 ┌──────────────────────────────────────┐
 │          Browser (Any Device)        │
 │  ┌────────────────────────────────┐  │
@@ -47,6 +65,7 @@ A self-hosted AI assistant optimized for Raspberry Pi 4, featuring voice interac
 ## System Requirements
 
 ### Production (Raspberry Pi 4)
+
 - Raspberry Pi 4 (8GB RAM recommended, 4GB minimum)
 - Raspbian OS / Raspberry Pi OS
 - Python 3.9+
@@ -54,11 +73,20 @@ A self-hosted AI assistant optimized for Raspberry Pi 4, featuring voice interac
 - Qwen 1.5B Q4 GGUF model
 
 ### Development (Laptop/Desktop)
+
 - Python 3.9+
 - Node.js 18+
 - Ollama (optional, for development)
 
 ## Quick Start
+
+**For detailed platform-specific instructions, see:**
+
+- 🪟 [Windows Setup Guide](WINDOWS_SETUP.md)
+- 🐧 [Linux Setup Guide](LINUX_SETUP.md)
+- 🥧 [Raspberry Pi Deployment](DEPLOYMENT.md)
+
+**High-level Overview:**
 
 ### 1. Clone Repository
 
@@ -67,73 +95,51 @@ git clone <repository-url>
 cd atlas-assistant-v3
 ```
 
-### 2. Backend Setup
+### 2. Install Prerequisites
+
+- Python 3.9+
+- Node.js 18+
+- Ollama (for development) OR llama.cpp (for production)
+
+### 3. Setup and Start Backend
+
+**Linux/Mac:**
 
 ```bash
 cd backend
-chmod +x setup.sh run.sh
-./setup.sh
+./setup.sh    # Setup
+./run.sh      # Start
 ```
 
-Edit `.env` to configure your LLM provider:
+**Windows:**
 
-**Development (Ollama):**
-```env
-LLM_PROVIDER=ollama
-LLM_BASE_URL=http://localhost:11434
-```
-
-**Production (llama.cpp on Raspberry Pi):**
-```env
-LLM_PROVIDER=llamacpp
-LLM_BASE_URL=http://localhost:8080
-```
-
-### 3. Start LLM Server
-
-**Development (Ollama):**
-```bash
-ollama run qwen:1.5b-chat-v1.5-q4_0
-```
-
-**Production (llama.cpp on Raspberry Pi):**
-
-First, download and compile llama.cpp:
-```bash
-git clone https://github.com/ggerganov/llama.cpp
-cd llama.cpp
-make
-```
-
-Download Qwen 1.5B Q4 model:
-```bash
-# Download from Hugging Face
-mkdir -p models
-cd models
-# Example: download from https://huggingface.co/Qwen/Qwen-1_5B-Chat-GGUF
-wget https://huggingface.co/Qwen/Qwen-1_5B-Chat-GGUF/resolve/main/qwen-1_5b-chat-q4_0.gguf
-```
-
-Start llama.cpp server:
-```bash
-./server -m models/qwen-1_5b-chat-q4_0.gguf \
-         -c 2048 \
-         -ngl 0 \
-         --host 0.0.0.0 \
-         --port 8080 \
-         -t 4
-```
-
-### 4. Start Backend
-
-```bash
+```cmd
 cd backend
-./run.sh
+setup.bat     # Setup
+run.bat       # Start
 ```
+
+### 4. Setup and Start Frontend
+
+```bash
+cd frontend
+npm install
+npm run dev
+```
+
+### 5. Access JARVIS
+
+Open browser: <http://localhost:5173/jarvis>
+
+**See platform-specific guides above for detailed instructions and troubleshooting.**
+
+## Project Structure
+
+## Backend Setup
 
 Backend runs on `http://0.0.0.0:8000`
 
-### 5. Frontend Setup
+## Frontend Setup
 
 ```bash
 cd frontend
@@ -142,11 +148,13 @@ cp .env.example .env
 ```
 
 Edit `.env` to set backend URL:
+
 ```env
 VITE_API_URL=http://localhost:8000
 ```
 
 For production (accessing from other devices):
+
 ```env
 VITE_API_URL=http://raspberrypi.local:8000
 ```
@@ -154,11 +162,13 @@ VITE_API_URL=http://raspberrypi.local:8000
 ### 6. Start Frontend
 
 **Development:**
+
 ```bash
 npm run dev
 ```
 
 **Production:**
+
 ```bash
 npm run build
 npm start
@@ -167,12 +177,13 @@ npm start
 ### 7. Access JARVIS
 
 Open your browser and navigate to:
+
 - Development: `http://localhost:5173/jarvis`
 - Production: `http://<raspberry-pi-ip>:3000/jarvis`
 
-## Project Structure
+## Directory Structure
 
-```
+```text
 atlas-assistant-v3/
 ├── backend/                      # FastAPI Backend
 │   ├── app/
@@ -209,6 +220,7 @@ atlas-assistant-v3/
 Send a message to JARVIS.
 
 **Request:**
+
 ```json
 {
   "message": "What time is it?"
@@ -216,6 +228,7 @@ Send a message to JARVIS.
 ```
 
 **Response:**
+
 ```json
 {
   "response": "It's currently 3:45 PM on Monday, February 10, 2026.",
@@ -233,6 +246,7 @@ Send a message to JARVIS.
 Check backend and LLM health.
 
 **Response:**
+
 ```json
 {
   "status": "healthy",
@@ -244,7 +258,7 @@ Check backend and LLM health.
 ## Supported Intents
 
 | Intent | Description | Example |
-|--------|-------------|---------|
+| -------- | ----------- | --------- |
 | greeting | Greetings | "Hello", "Hi JARVIS" |
 | time | Time queries | "What time is it?" |
 | weather | Weather queries | "What's the weather?" (placeholder) |
@@ -257,12 +271,14 @@ Check backend and LLM health.
 ## Voice Features
 
 ### Voice Input (🎤 button)
+
 1. Click the microphone button
 2. Speak your message
 3. Click again to stop (or it stops automatically)
 4. Message appears in input field
 
 ### Voice Response (🔊 Send & Speak button)
+
 1. Type or speak your message
 2. Click "Send & Speak" button
 3. JARVIS responds with text and voice
@@ -284,7 +300,7 @@ Check backend and LLM health.
 ### Backend (.env)
 
 | Variable | Description | Default |
-|----------|-------------|---------|
+| ------------- | ----------- | --------- |
 | `LLM_PROVIDER` | `ollama` or `llamacpp` | `ollama` |
 | `LLM_BASE_URL` | LLM server URL | Provider-specific |
 | `LLM_MODEL_NAME` | Model name | Provider-specific |
@@ -297,12 +313,13 @@ Check backend and LLM health.
 ### Frontend (.env)
 
 | Variable | Description | Default |
-|----------|-------------|---------|
+| ------------- | ----------- | --------- |
 | `VITE_API_URL` | Backend API URL | `http://localhost:8000` |
 
 ## Troubleshooting
 
 ### Backend won't start
+
 ```bash
 # Check if port 8000 is available
 lsof -i :8000
@@ -312,6 +329,7 @@ curl http://localhost:8000/api/health
 ```
 
 ### LLM not responding
+
 ```bash
 # Check if LLM server is running
 # For Ollama:
@@ -322,12 +340,14 @@ curl http://localhost:8080/health
 ```
 
 ### High CPU usage on RPi
+
 1. Verify using Q4 quantization (not Q8)
 2. Set threads to 4 in llama.cpp: `-t 4`
 3. Reduce `LLM_MAX_TOKENS` to 128
 4. Increase temperature for faster sampling
 
 ### Voice features not working
+
 - Voice features require HTTPS or localhost
 - Check browser console for errors
 - Verify browser supports Web Speech API (Chrome, Edge recommended)
@@ -361,6 +381,7 @@ def _handle_weather(self, entities: Dict[str, Any]) -> str:
 ### Adding Persistent Memory
 
 Consider adding:
+
 - SQLite database for conversation history
 - Redis for session state
 - File-based storage for user preferences
@@ -368,6 +389,7 @@ Consider adding:
 ## Performance Metrics
 
 On Raspberry Pi 4 (8GB):
+
 - **Response Time**: 2-5 seconds per message
 - **Memory Usage**: ~1.5GB (model + runtime)
 - **CPU Usage**: 80-100% during inference, 5% idle
@@ -399,6 +421,7 @@ Contributions welcome! Please open an issue before submitting PRs.
 ## Support
 
 For issues and questions:
+
 - Backend: See `backend/README.md`
 - Check API health: `http://localhost:8000/api/health`
 - View API docs: `http://localhost:8000/docs`

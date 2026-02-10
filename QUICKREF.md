@@ -19,7 +19,7 @@ cd frontend
 npm run dev
 ```
 
-Access: http://localhost:5173/jarvis
+Access: <http://localhost:5173/jarvis>
 
 ## Production (Raspberry Pi)
 
@@ -69,7 +69,7 @@ curl -X POST http://localhost:8000/api/chat \
 ## API Endpoints
 
 | Endpoint | Method | Description |
-|----------|--------|-------------|
+| -------- | ------ | ----------- |
 | `/` | GET | Root info |
 | `/docs` | GET | API documentation |
 | `/api/chat` | POST | Send message |
@@ -105,6 +105,7 @@ VITE_API_URL=http://localhost:8000
 ## File Locations
 
 ### Backend
+
 - Main app: `backend/app/main.py`
 - Config: `backend/app/config.py`
 - Intent classifier: `backend/app/services/intent_classifier.py`
@@ -112,6 +113,7 @@ VITE_API_URL=http://localhost:8000
 - LLM providers: `backend/app/llm/`
 
 ### Frontend
+
 - Chat UI: `frontend/app/pages/jarvis-chat/jarvis-chat.tsx`
 - Routes: `frontend/app/routes/jarvis.tsx`
 
@@ -120,13 +122,15 @@ VITE_API_URL=http://localhost:8000
 ### Add New Intent
 
 1. Edit `backend/app/services/intent_classifier.py`:
+
 ```python
 class IntentType(str, Enum):
     # ... existing intents
     MY_NEW_INTENT = "my_new_intent"
 ```
 
-2. Add handler in `backend/app/services/command_router.py`:
+1. Add handler in `backend/app/services/command_router.py`:
+
 ```python
 def route(self, intent, entities, user_input):
     # ...
@@ -137,11 +141,12 @@ def _handle_my_new_intent(self, entities):
     return "Response for my new intent"
 ```
 
-3. Restart backend
+1. Restart backend
 
 ### Change LLM Provider
 
 Edit `backend/.env`:
+
 ```env
 # Switch to Ollama
 LLM_PROVIDER=ollama
@@ -157,6 +162,7 @@ Restart backend.
 ### Update Dependencies
 
 Backend:
+
 ```bash
 cd backend
 source venv/bin/activate
@@ -164,6 +170,7 @@ pip install -r requirements.txt
 ```
 
 Frontend:
+
 ```bash
 cd frontend
 npm install
@@ -202,18 +209,21 @@ curl -X POST http://localhost:8000/api/chat \
 ## Performance Tuning
 
 ### Low Memory Situation
+
 ```env
 LLM_MAX_TOKENS=128
 MAX_CONTEXT_LENGTH=1024
 ```
 
 ### High CPU Usage
+
 ```env
 LLM_TEMPERATURE=0.3
 LLM_MAX_TOKENS=128
 ```
 
 ### Slow Response
+
 - Use pattern matching for common queries
 - Reduce context length
 - Use Q3 quantization instead of Q4
@@ -221,36 +231,42 @@ LLM_MAX_TOKENS=128
 ## Troubleshooting
 
 ### "Connection refused"
+
 - Check if service is running: `sudo systemctl status jarvis-backend.service`
 - Check if port is in use: `lsof -i :8000`
 
 ### "LLM not available"
+
 - Check LLM server: `curl http://localhost:8080/health`
 - Check LLM_BASE_URL in .env
 - View logs: `sudo journalctl -u llamacpp-server.service -f`
 
 ### "Out of memory"
+
 - Use Q4 quantization
 - Reduce MAX_TOKENS
 - Add swap space
 - Close other applications
 
 ### Voice not working
+
 - Use HTTPS or localhost
 - Check browser console
 - Verify Web Speech API support (Chrome/Edge)
 
 ## URLs
 
-### Development
-- Frontend: http://localhost:5173/jarvis
-- Backend: http://localhost:8000
-- API Docs: http://localhost:8000/docs
+### Development URLs
+
+- Frontend: <http://localhost:5173/jarvis>
+- Backend: <http://localhost:8000>
+- API Docs: <http://localhost:8000/docs>
 
 ### Production
-- Frontend: http://raspberrypi.local:3000/jarvis
-- Backend: http://raspberrypi.local:8000
-- API Docs: http://raspberrypi.local:8000/docs
+
+- Frontend: <http://raspberrypi.local:3000/jarvis>
+- Backend: <http://raspberrypi.local:8000>
+- API Docs: <http://raspberrypi.local:8000/docs>
 
 ## System Info
 
@@ -279,4 +295,4 @@ systemctl list-units --state=running | grep jarvis
 - Backend README: `backend/README.md`
 - Deployment Guide: `DEPLOYMENT.md`
 - Main README: `README.md`
-- API Docs: http://localhost:8000/docs
+- API Docs: <http://localhost:8000/docs>

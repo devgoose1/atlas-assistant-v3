@@ -50,6 +50,7 @@ cd models
 ```
 
 Download Qwen 1.5B Q4 model:
+
 ```bash
 # Option 1: Direct download (if available)
 wget https://huggingface.co/Qwen/Qwen-1_5B-Chat-GGUF/resolve/main/qwen-1_5b-chat-q4_0.gguf
@@ -60,6 +61,7 @@ huggingface-cli download Qwen/Qwen-1_5B-Chat-GGUF qwen-1_5b-chat-q4_0.gguf --loc
 ```
 
 Test llama.cpp:
+
 ```bash
 cd ~/llama.cpp
 ./server -m models/qwen-1_5b-chat-q4_0.gguf -c 2048 -ngl 0 -t 4
@@ -75,11 +77,13 @@ chmod +x setup.sh run.sh
 ```
 
 Configure for production:
+
 ```bash
 nano .env
 ```
 
 Set these values:
+
 ```env
 LLM_PROVIDER=llamacpp
 LLM_BASE_URL=http://localhost:8080
@@ -90,6 +94,7 @@ DEBUG=false
 ```
 
 Test backend:
+
 ```bash
 ./run.sh
 # Press Ctrl+C after verifying it starts
@@ -104,16 +109,19 @@ cp .env.example .env
 ```
 
 Configure frontend:
+
 ```bash
 nano .env
 ```
 
 Set backend URL (use your Pi's IP or hostname):
+
 ```env
 VITE_API_URL=http://raspberrypi.local:8000
 ```
 
 Build frontend:
+
 ```bash
 npm run build
 ```
@@ -159,11 +167,13 @@ sudo systemctl status jarvis-backend.service
 ### Setup frontend service (optional - for production)
 
 Create frontend service:
+
 ```bash
 sudo nano /etc/systemd/system/jarvis-frontend.service
 ```
 
 Contents:
+
 ```ini
 [Unit]
 Description=JARVIS Frontend Service
@@ -183,6 +193,7 @@ WantedBy=multi-user.target
 ```
 
 Enable and start:
+
 ```bash
 sudo systemctl daemon-reload
 sudo systemctl enable jarvis-frontend.service
@@ -193,6 +204,7 @@ sudo systemctl status jarvis-frontend.service
 ## Step 8: Verify Installation
 
 ### Check all services
+
 ```bash
 sudo systemctl status llamacpp-server.service
 sudo systemctl status jarvis-backend.service
@@ -200,6 +212,7 @@ sudo systemctl status jarvis-frontend.service
 ```
 
 ### Test endpoints
+
 ```bash
 # Test llama.cpp
 curl http://localhost:8080/health
@@ -216,18 +229,21 @@ curl -X POST http://localhost:8000/api/chat \
 ### Access from browser
 
 From any device on your local network:
-```
+
+```text
 http://raspberrypi.local:3000/jarvis
 ```
 
 Or using IP address:
-```
+
+```text
 http://192.168.1.X:3000/jarvis
 ```
 
 ## Step 9: Configure Firewall (Optional)
 
 If using firewall:
+
 ```bash
 sudo ufw allow 8000/tcp  # Backend
 sudo ufw allow 8080/tcp  # llama.cpp
@@ -240,6 +256,7 @@ sudo ufw enable
 ### Services won't start
 
 Check logs:
+
 ```bash
 # llama.cpp logs
 sudo journalctl -u llamacpp-server.service -f
@@ -254,6 +271,7 @@ sudo journalctl -u jarvis-frontend.service -f
 ### High CPU usage
 
 This is normal during LLM inference. To reduce:
+
 1. Lower `LLM_MAX_TOKENS` to 128 in backend/.env
 2. Increase temperature to 0.3
 3. Close other applications
@@ -263,6 +281,7 @@ This is normal during LLM inference. To reduce:
 1. Use Q4 quantization (not Q8)
 2. Reduce context length: `LLM_MAX_CONTEXT=1024`
 3. Add swap space:
+
 ```bash
 sudo dphys-swapfile swapoff
 sudo nano /etc/dphys-swapfile
@@ -288,6 +307,7 @@ sudo dphys-swapfile swapon
 ## Maintenance
 
 ### View logs
+
 ```bash
 # View llama.cpp logs
 sudo journalctl -u llamacpp-server.service --since today
@@ -300,6 +320,7 @@ sudo journalctl -u jarvis-frontend.service --since today
 ```
 
 ### Restart services
+
 ```bash
 sudo systemctl restart llamacpp-server.service
 sudo systemctl restart jarvis-backend.service
@@ -307,6 +328,7 @@ sudo systemctl restart jarvis-frontend.service
 ```
 
 ### Update JARVIS
+
 ```bash
 cd ~/atlas-assistant-v3
 git pull
@@ -325,6 +347,7 @@ sudo systemctl restart jarvis-frontend.service
 ```
 
 ### Monitor performance
+
 ```bash
 # CPU and memory
 htop
@@ -339,18 +362,22 @@ systemctl list-units --state=running | grep jarvis
 ## Performance Tips
 
 1. **Overclock (optional)**: Edit `/boot/config.txt` to add:
-   ```
+
+   ```text
    over_voltage=2
    arm_freq=1750
    ```
+
    ⚠️ Warning: Requires adequate cooling
 
 2. **Disable desktop environment**: If running headless:
+
    ```bash
    sudo systemctl set-default multi-user.target
    ```
 
 3. **Close unnecessary services**:
+
    ```bash
    sudo systemctl disable bluetooth
    sudo systemctl disable cups
@@ -361,17 +388,20 @@ systemctl list-units --state=running | grep jarvis
 ## Security Recommendations
 
 1. **Change default password**:
+
    ```bash
    passwd
    ```
 
 2. **Setup SSH keys** (instead of password):
+
    ```bash
    ssh-keygen -t ed25519
    # Copy public key to other devices
    ```
 
 3. **Disable SSH password authentication**:
+
    ```bash
    sudo nano /etc/ssh/sshd_config
    # Set: PasswordAuthentication no
@@ -379,6 +409,7 @@ systemctl list-units --state=running | grep jarvis
    ```
 
 4. **Keep system updated**:
+
    ```bash
    sudo apt update && sudo apt upgrade -y
    ```
@@ -388,11 +419,13 @@ systemctl list-units --state=running | grep jarvis
 ## Backup
 
 Create a backup script:
+
 ```bash
 nano ~/backup-jarvis.sh
 ```
 
 Contents:
+
 ```bash
 #!/bin/bash
 DATE=$(date +%Y%m%d)
@@ -403,6 +436,7 @@ echo "Backup created: jarvis-backup-$DATE.tar.gz"
 ```
 
 Make executable and run:
+
 ```bash
 chmod +x ~/backup-jarvis.sh
 ./backup-jarvis.sh

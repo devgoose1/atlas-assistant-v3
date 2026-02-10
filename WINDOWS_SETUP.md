@@ -23,6 +23,7 @@ setup.bat
 ```
 
 This will:
+
 - Create a Python virtual environment
 - Install all dependencies
 - Create a `.env` file with defaults
@@ -36,6 +37,7 @@ ollama run qwen:1.5b-chat-v1.5-q4_0
 ```
 
 This will:
+
 - Download the Qwen 1.5B model (first time only, ~900MB)
 - Start the Ollama server on port 11434
 - Keep it running in this terminal
@@ -51,7 +53,7 @@ cd backend
 run.bat
 ```
 
-The backend will be available at: http://localhost:8000
+The backend will be available at: <http://localhost:8000>
 
 **Leave this terminal open!**
 
@@ -66,6 +68,7 @@ copy .env.example .env
 ```
 
 Edit `frontend\.env` if needed:
+
 ```env
 VITE_API_URL=http://localhost:8000
 ```
@@ -78,14 +81,15 @@ In the same terminal:
 npm run dev
 ```
 
-The frontend will be available at: http://localhost:5173
+The frontend will be available at: <http://localhost:5173>
 
 **Leave this terminal open!**
 
 ### 6. Access JARVIS
 
 Open your browser and go to:
-```
+
+```text
 http://localhost:5173/jarvis
 ```
 
@@ -94,19 +98,22 @@ http://localhost:5173/jarvis
 You should now have 3 terminals running:
 
 1. **Terminal 1**: Ollama server
-   ```
+
+   ```text
    >>> qwen:1.5b-chat-v1.5-q4_0 ready
    ```
 
 2. **Terminal 2**: JARVIS Backend
-   ```
+
+   ```text
    🚀 Starting JARVIS Assistant v1.0.0
    📡 LLM Provider: ollama
    🌐 Server: http://0.0.0.0:8000
    ```
 
 3. **Terminal 3**: Frontend dev server
-   ```
+
+   ```text
    VITE ready in 500ms
    ➜ Local: http://localhost:5173/
    ```
@@ -116,11 +123,13 @@ You should now have 3 terminals running:
 ### Test 1: Health Check
 
 Open a new terminal:
+
 ```cmd
 curl http://localhost:8000/api/health
 ```
 
 Should return:
+
 ```json
 {
   "status": "healthy",
@@ -137,7 +146,7 @@ curl -X POST http://localhost:8000/api/chat -H "Content-Type: application/json" 
 
 ### Test 3: Web UI
 
-1. Go to http://localhost:5173/jarvis
+1. Go to <http://localhost:5173/jarvis>
 2. Type "Hello" and click Send
 3. JARVIS should respond with a greeting
 
@@ -152,42 +161,51 @@ curl -X POST http://localhost:8000/api/chat -H "Content-Type: application/json" 
 ## Troubleshooting
 
 ### "Python not found"
+
 - Install Python from python.org
 - Make sure "Add Python to PATH" was checked during installation
 - Restart your terminal after installation
 
 ### "npm not found"
+
 - Install Node.js from nodejs.org
 - Restart your terminal after installation
 
 ### "ollama not found"
+
 - Install Ollama from ollama.ai
 - Restart your terminal after installation
 
 ### Backend shows "LLM not available"
+
 - Make sure Ollama is running: `ollama run qwen:1.5b-chat-v1.5-q4_0`
-- Check that Ollama is on port 11434: http://localhost:11434
+- Check that Ollama is on port 11434: <http://localhost:11434>
 - Verify `LLM_BASE_URL=http://localhost:11434` in `backend\.env`
 
 ### "Connection refused" in frontend
+
 - Make sure backend is running on port 8000
 - Check `VITE_API_URL=http://localhost:8000` in `frontend\.env`
 - Restart frontend after changing .env: `npm run dev`
 
 ### Voice features not working
+
 - Voice requires Chrome, Edge, or Safari (not Firefox)
 - Check browser console for errors (F12)
 - Microphone permission must be granted
 
 ### Port already in use
+
 If port 8000 or 5173 is already in use:
 
 **Backend** - edit `backend\.env`:
+
 ```env
 PORT=8001
 ```
 
 **Frontend** - edit `vite.config.ts`:
+
 ```typescript
 server: {
   port: 5174
@@ -197,6 +215,7 @@ server: {
 ## Quick Commands Reference
 
 ### Start Everything
+
 ```cmd
 REM Terminal 1
 ollama run qwen:1.5b-chat-v1.5-q4_0
@@ -209,15 +228,19 @@ cd frontend && npm run dev
 ```
 
 ### Stop Everything
+
 Press `Ctrl+C` in each terminal.
 
 ### Restart Backend Only
+
 In Terminal 2, press `Ctrl+C`, then:
+
 ```cmd
 run.bat
 ```
 
 ### Check Status
+
 ```cmd
 REM Check backend
 curl http://localhost:8000/api/health
@@ -233,25 +256,31 @@ Once everything works locally:
 1. ✅ Test all voice features
 2. ✅ Try different queries (time, greetings, questions)
 3. ✅ Verify response times are acceptable
-4. ✅ Check the API docs: http://localhost:8000/docs
+4. ✅ Check the API docs: <http://localhost:8000/docs>
 5. 🚀 Ready to deploy to Raspberry Pi? See `DEPLOYMENT.md`
 
 ## Development Tips
 
 ### Auto-reload
+
 Both backend and frontend have auto-reload enabled:
+
 - Backend: Edit any `.py` file → server restarts automatically
 - Frontend: Edit any `.tsx` file → browser updates automatically
 
 ### View Logs
+
 Backend logs appear in Terminal 2. For more details, add to `backend\.env`:
+
 ```env
 DEBUG=true
 ```
 
 ### Test Without Frontend
+
 Use the interactive API docs:
-1. Go to http://localhost:8000/docs
+
+1. Go to <http://localhost:8000/docs>
 2. Click "POST /api/chat"
 3. Click "Try it out"
 4. Enter a message and click "Execute"
@@ -276,11 +305,13 @@ Restart backend after changing models.
 ## Performance Notes
 
 On development machines:
+
 - Response time: < 1 second (depending on CPU)
 - Memory usage: ~2GB (Ollama + model)
 - Token generation: 50-100 tokens/second
 
 On Raspberry Pi 4 (production):
+
 - Response time: 2-5 seconds
 - Memory usage: ~1.5GB
 - Token generation: 10-20 tokens/second
@@ -288,6 +319,6 @@ On Raspberry Pi 4 (production):
 ## Support
 
 - Backend issues: Check `backend/README.md`
-- API documentation: http://localhost:8000/docs
+- API documentation: <http://localhost:8000/docs>
 - Deployment guide: `DEPLOYMENT.md`
 - Quick reference: `QUICKREF.md`

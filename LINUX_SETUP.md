@@ -64,6 +64,7 @@ chmod +x setup.sh run.sh
 ```
 
 This will:
+
 - Create a Python virtual environment
 - Install all dependencies
 - Create a `.env` file with defaults
@@ -77,6 +78,7 @@ ollama run qwen:1.5b-chat-v1.5-q4_0
 ```
 
 This will:
+
 - Download the Qwen 1.5B model (first time only, ~900MB)
 - Start the Ollama server on port 11434
 - Keep it running in this terminal
@@ -92,7 +94,7 @@ cd backend
 ./run.sh
 ```
 
-The backend will be available at: http://localhost:8000
+The backend will be available at: <http://localhost:8000>
 
 **Leave this terminal open!**
 
@@ -107,6 +109,7 @@ cp .env.example .env
 ```
 
 Edit `frontend/.env` if needed:
+
 ```bash
 nano .env
 # or
@@ -116,6 +119,7 @@ gedit .env
 ```
 
 Content should be:
+
 ```env
 VITE_API_URL=http://localhost:8000
 ```
@@ -128,14 +132,15 @@ In the same terminal:
 npm run dev
 ```
 
-The frontend will be available at: http://localhost:5173
+The frontend will be available at: <http://localhost:5173>
 
 **Leave this terminal open!**
 
 ### 6. Access JARVIS
 
 Open your browser and go to:
-```
+
+```text
 http://localhost:5173/jarvis
 ```
 
@@ -144,12 +149,14 @@ http://localhost:5173/jarvis
 You should now have 3 terminals running:
 
 1. **Terminal 1**: Ollama server
-   ```
+
+   ```text
    >>> qwen:1.5b-chat-v1.5-q4_0 ready
    ```
 
 2. **Terminal 2**: JARVIS Backend
-   ```
+
+   ```text
    🚀 Starting JARVIS Assistant v1.0.0
    📡 LLM Provider: ollama
    🤖 Model: default
@@ -157,7 +164,8 @@ You should now have 3 terminals running:
    ```
 
 3. **Terminal 3**: Frontend dev server
-   ```
+
+   ```text
    VITE v5.x.x ready in 500ms
    ➜ Local: http://localhost:5173/
    ➜ Network: use --host to expose
@@ -168,11 +176,13 @@ You should now have 3 terminals running:
 ### Test 1: Health Check
 
 Open a new terminal:
+
 ```bash
 curl http://localhost:8000/api/health
 ```
 
 Should return:
+
 ```json
 {
   "status": "healthy",
@@ -191,7 +201,7 @@ curl -X POST http://localhost:8000/api/chat \
 
 ### Test 3: Web UI
 
-1. Go to http://localhost:5173/jarvis
+1. Go to <http://localhost:5173/jarvis>
 2. Type "Hello" and click Send
 3. JARVIS should respond with a greeting
 
@@ -206,6 +216,7 @@ curl -X POST http://localhost:8000/api/chat \
 ## Troubleshooting
 
 ### "python3: command not found"
+
 ```bash
 # Ubuntu/Debian
 sudo apt install python3 python3-pip python3-venv
@@ -218,6 +229,7 @@ sudo pacman -S python python-pip
 ```
 
 ### "node: command not found"
+
 ```bash
 # Install using NodeSource (Ubuntu/Debian)
 curl -fsSL https://deb.nodesource.com/setup_18.x | sudo -E bash -
@@ -229,6 +241,7 @@ nvm install 18
 ```
 
 ### "ollama: command not found"
+
 ```bash
 # Install Ollama
 curl -fsSL https://ollama.com/install.sh | sh
@@ -238,6 +251,7 @@ ollama --version
 ```
 
 ### Backend shows "LLM not available"
+
 ```bash
 # Check if Ollama is running
 curl http://localhost:11434/api/tags
@@ -251,6 +265,7 @@ cat backend/.env | grep LLM_BASE_URL
 ```
 
 ### "Connection refused" in frontend
+
 ```bash
 # Make sure backend is running
 curl http://localhost:8000/api/health
@@ -265,10 +280,12 @@ npm run dev
 ```
 
 ### Voice features not working
+
 - Voice requires Chrome, Edge, or Safari (not Firefox)
 - Check browser console for errors (F12)
 - Microphone permission must be granted
 - On Linux, check audio permissions:
+
   ```bash
   # Check if user is in audio group
   groups $USER
@@ -279,6 +296,7 @@ npm run dev
   ```
 
 ### Port already in use
+
 ```bash
 # Check what's using port 8000
 sudo lsof -i :8000
@@ -290,6 +308,7 @@ echo "PORT=8001" >> backend/.env
 ```
 
 To change frontend port, edit `vite.config.ts`:
+
 ```typescript
 server: {
   port: 5174
@@ -297,6 +316,7 @@ server: {
 ```
 
 ### Permission denied on scripts
+
 ```bash
 chmod +x backend/setup.sh backend/run.sh
 ```
@@ -304,6 +324,7 @@ chmod +x backend/setup.sh backend/run.sh
 ## Quick Commands Reference
 
 ### Start Everything
+
 ```bash
 # Terminal 1
 ollama run qwen:1.5b-chat-v1.5-q4_0
@@ -316,15 +337,19 @@ cd frontend && npm run dev
 ```
 
 ### Stop Everything
+
 Press `Ctrl+C` in each terminal.
 
 ### Restart Backend Only
+
 In Terminal 2, press `Ctrl+C`, then:
+
 ```bash
 ./run.sh
 ```
 
 ### Check Status
+
 ```bash
 # Check backend
 curl http://localhost:8000/api/health
@@ -337,6 +362,7 @@ sudo lsof -i :8000,11434,5173
 ```
 
 ### View Running Processes
+
 ```bash
 # Check Ollama
 ps aux | grep ollama
@@ -355,25 +381,31 @@ Once everything works locally:
 1. ✅ Test all voice features
 2. ✅ Try different queries (time, greetings, questions)
 3. ✅ Verify response times are acceptable
-4. ✅ Check the API docs: http://localhost:8000/docs
+4. ✅ Check the API docs: <http://localhost:8000/docs>
 5. 🚀 Ready to deploy to Raspberry Pi? See `DEPLOYMENT.md`
 
 ## Development Tips
 
 ### Auto-reload
+
 Both backend and frontend have auto-reload enabled:
+
 - Backend: Edit any `.py` file → server restarts automatically
 - Frontend: Edit any `.tsx` file → browser updates automatically
 
 ### View Logs
+
 Backend logs appear in Terminal 2. For more details, add to `backend/.env`:
+
 ```bash
 echo "DEBUG=true" >> backend/.env
 ```
 
 ### Test Without Frontend
+
 Use the interactive API docs:
-1. Go to http://localhost:8000/docs
+
+1. Go to <http://localhost:8000/docs>
 2. Click "POST /api/chat"
 3. Click "Try it out"
 4. Enter a message and click "Execute"
@@ -448,15 +480,18 @@ screen -r ollama
 ## Performance Notes
 
 On development machines:
+
 - Response time: < 1 second (depending on CPU)
 - Memory usage: ~2GB (Ollama + model)
 - Token generation: 50-100 tokens/second
 
 On laptop with less RAM:
+
 - Consider using a smaller model: `qwen:0.5b`
 - Or use Ollama with CPU-only mode (default on Linux)
 
 On Raspberry Pi 4 (production):
+
 - Response time: 2-5 seconds
 - Memory usage: ~1.5GB
 - Token generation: 10-20 tokens/second
@@ -539,6 +574,7 @@ systemctl --user status jarvis-ollama.service
 To access JARVIS from your phone or tablet on the same network:
 
 1. Find your machine's IP:
+
    ```bash
    hostname -I
    # or
@@ -546,25 +582,29 @@ To access JARVIS from your phone or tablet on the same network:
    ```
 
 2. Edit `frontend/.env`:
+
    ```env
    VITE_API_URL=http://192.168.1.X:8000
    ```
+
    Replace `192.168.1.X` with your machine's IP
 
 3. Start frontend with host flag:
+
    ```bash
    npm run dev -- --host
    ```
 
 4. Access from other device:
-   ```
+
+   ```text
    http://192.168.1.X:5173/jarvis
    ```
 
 ## Support
 
 - Backend issues: Check `backend/README.md`
-- API documentation: http://localhost:8000/docs
+- API documentation: <http://localhost:8000/docs>
 - Deployment guide: `DEPLOYMENT.md`
 - Quick reference: `QUICKREF.md`
 - Linux-specific issues: Check your distro's wiki or forums
