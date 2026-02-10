@@ -1,6 +1,46 @@
-/frontend/node-modules
-/backend/node-modules
+# Node modules
+node_modules/
+/frontend/node_modules
+/backend/node_modules
 
+# Build outputs
 /frontend/dist
-/frontend/.gitignore
-/frotnend/.dockerignore
+/frontend/build
+/frontend/.react-router
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+/backend/venv/
+/backend/env/
+*.egg-info/
+dist/
+build/
+
+# Environment files
+.env
+.env.local
+*.local
+
+# IDEs
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+logs/
+
+# Temporary files
+*.tmp
+tmp/
+temp/

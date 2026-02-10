@@ -1,0 +1,15 @@
+[Unit]
+Description=JARVIS Backend Service
+After=network.target
+
+[Service]
+Type=simple
+User=pi
+WorkingDirectory=/home/pi/atlas-assistant-v3/backend
+Environment="PATH=/home/pi/atlas-assistant-v3/backend/venv/bin"
+ExecStart=/home/pi/atlas-assistant-v3/backend/venv/bin/python -m uvicorn app.main:app --host 0.0.0.0 --port 8000
+Restart=on-failure
+RestartSec=5s
+
+[Install]
+WantedBy=multi-user.target
